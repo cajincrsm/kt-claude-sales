@@ -1,0 +1,1615 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KT CLOUD TECH UP — 클라우드 네이티브 과정 컨택 가이드</title>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --navy:#0B1F3A; --navy-2:#173B68; --navy-deep:#061528;
+  --sky:#2E86D9; --sky-2:#1F6BB8; --sky-light:#E5F0FB;
+  --bg:#F7F9FC; --card:#FFFFFF;
+  --border:#DEE4EE; --border-2:#C5CFDD;
+  --text:#0B1F3A; --text-2:#4A5568; --muted:#94A0B5;
+  --warn:#DC2626; --warn-bg:#FDEEEF; --warn-border:#F8C5C9;
+  --ok:#1A9D5E; --ok-bg:#EEFAF3;
+  --amber:#D97706; --amber-bg:#FFFBEB; --amber-border:#FDE68A;
+  --shadow:0 1px 3px rgba(11,31,58,.04);
+  --shadow-2:0 2px 8px rgba(11,31,58,.08),0 1px 3px rgba(11,31,58,.06);
+  --r:10px;
+}
+html,body{margin:0;padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+  color:var(--text); background:var(--bg); line-height:1.65; font-size:15px;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4,h5{margin:0;font-weight:700;line-height:1.35}
+p{margin:0 0 8px}
+ul,ol{margin:0 0 8px;padding-left:20px}
+li{margin-bottom:4px}
+a{color:var(--sky);text-decoration:none}
+button{font-family:inherit}
+
+/* Topbar */
+.topbar{
+  position:sticky; top:42px; z-index:50;
+  background:linear-gradient(135deg,var(--navy-deep),var(--navy));
+  color:#fff; box-shadow:0 4px 14px rgba(11,31,58,.18);
+}
+.topbar-inner{
+  max-width:1440px; margin:0 auto; padding:14px 22px;
+  display:flex; align-items:center; gap:24px; flex-wrap:wrap;
+}
+.brand{flex:0 0 auto}
+.brand-mark{
+  display:inline-block; font-size:11px; font-weight:700;
+  letter-spacing:.12em; opacity:.85; margin-bottom:2px;
+}
+.brand h1{font-size:19px; color:#fff; line-height:1.2}
+.meta-grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:10px 20px; flex:1; min-width:0;
+}
+.meta-item{font-size:12.5px}
+.meta-item dt{opacity:.75; font-size:10.5px; letter-spacing:.05em; margin-bottom:2px; text-transform:uppercase}
+.meta-item dd{margin:0; font-weight:600; font-size:13.5px}
+.dday{
+  display:inline-flex; align-items:center; gap:6px;
+  background:rgba(255,255,255,.18); padding:7px 16px; border-radius:999px;
+  font-weight:800; font-size:14px; backdrop-filter:blur(4px);
+  font-variant-numeric:tabular-nums;
+}
+.dday.urgent{background:rgba(245,158,11,.45)}
+.dday.expired{background:rgba(220,38,38,.55)}
+
+/* Layout */
+.layout{
+  max-width:1440px; margin:0 auto; padding:20px;
+  display:grid; grid-template-columns:340px 1fr; gap:20px;
+}
+.sidebar{
+  position:sticky; top:182px; align-self:start;
+  max-height:calc(100vh - 160px); overflow-y:auto;
+  padding-right:4px;
+}
+.sidebar::-webkit-scrollbar{width:6px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:3px}
+.content{min-width:0}
+
+/* Mobile */
+.sidebar-toggle{
+  display:none;
+  position:sticky; top:100px; z-index:40;
+  margin:10px 20px 0; padding:10px 16px;
+  background:var(--navy); color:#fff; border:0; border-radius:8px;
+  font-weight:700; cursor:pointer; box-shadow:var(--shadow);
+}
+@media (max-width:960px){
+  .topbar-inner{padding:12px 16px; gap:14px}
+  .brand h1{font-size:16px}
+  .meta-grid{grid-template-columns:repeat(2,1fr); gap:6px 12px}
+  .layout{grid-template-columns:1fr; padding:12px; gap:12px}
+  .sidebar{position:static; max-height:none; display:none}
+  .sidebar.open{display:block}
+  .sidebar-toggle{display:block}
+}
+
+/* Card */
+.card{
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--r); padding:14px;
+  box-shadow:var(--shadow); margin-bottom:10px;
+}
+.card>h3{
+  font-size:12px; color:var(--navy); margin-bottom:8px;
+  letter-spacing:.04em; text-transform:uppercase;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.card>h3 .badge{
+  font-size:10px; background:var(--sky-light); color:var(--sky-2);
+  padding:2px 8px; border-radius:999px; font-weight:700;
+}
+
+/* Channel toggle */
+.channel-toggle{
+  display:flex; gap:4px;
+  background:var(--bg); border-radius:8px; padding:4px;
+}
+.channel-toggle button{
+  flex:1; border:0; background:transparent;
+  padding:8px 10px; border-radius:6px;
+  cursor:pointer; font-weight:700; font-size:13px;
+  color:var(--muted); transition:all .15s;
+}
+.channel-toggle button.active{
+  background:var(--sky); color:#fff; box-shadow:var(--shadow);
+}
+
+/* Opening / closing block */
+.script-block{
+  background:linear-gradient(180deg,var(--sky-light),#fff);
+  border-left:3px solid var(--sky);
+  padding:12px 14px; border-radius:0 8px 8px 0;
+  font-size:14px; line-height:1.7; color:var(--text);
+  margin-bottom:8px; position:relative;
+}
+.script-block::before{
+  content:'"'; position:absolute; top:-4px; left:6px;
+  font-size:32px; color:var(--sky); opacity:.3; font-family:Georgia,serif;
+}
+.script-block .quote-body{padding-left:18px}
+.closing-row{
+  display:flex; align-items:flex-start; gap:8px;
+  margin-bottom:10px;
+}
+.closing-tag{
+  flex:0 0 32px; height:32px; border-radius:6px;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:800; font-size:13px; color:#fff;
+}
+.tag-strong{background:#dc2626}
+.tag-mid{background:#d97706}
+.tag-weak{background:#64748b}
+.closing-text{
+  flex:1; background:#fff; border:1px solid var(--border);
+  border-radius:8px; padding:10px 12px; font-size:14px; line-height:1.65;
+}
+.closing-meta{display:block; font-size:12.5px; color:var(--muted); font-weight:600; margin-bottom:4px}
+
+/* Forbidden card */
+.forbidden-card{background:var(--warn-bg); border-color:var(--warn-border); border-left:3px solid var(--warn); box-shadow:var(--shadow-2)}
+.forbidden-card>h3{color:var(--warn)}
+.forbidden-card.collapsed ul{display:none}
+.forbidden-card.collapsed .toggle-arrow{transform:rotate(-90deg); display:inline-block}
+.toggle-arrow{font-size:10px; transition:transform .15s; display:inline-block}
+.forbidden-list{list-style:none; padding:0; margin:0}
+.forbidden-list li{
+  padding:8px 0; border-bottom:1px dashed var(--warn-border); line-height:1.55;
+}
+.forbidden-list li:last-child{border-bottom:0}
+.forbidden-list .ph{
+  display:block;
+  background:#fff;
+  color:var(--warn);
+  padding:6px 10px;
+  border:1px solid var(--warn-border);
+  border-radius:6px;
+  font-weight:700;
+  font-size:13px;
+  margin-bottom:4px;
+}
+.forbidden-list .alt{
+  display:block;
+  background:var(--ok-bg);
+  color:#14532D;
+  padding:6px 10px;
+  border:1px solid #BFE8CF;
+  border-radius:6px;
+  font-size:12.5px;
+  font-weight:600;
+}
+.forbidden-list .alt::before{content:'→ '; color:var(--ok); font-weight:800}
+
+/* CTA */
+.cta-btn{
+  display:flex; flex-direction:column; gap:2px;
+  width:100%; padding:11px 14px; margin-bottom:8px;
+  background:#fff; color:var(--text); border:1px solid var(--border);
+  border-radius:8px; font-weight:700; cursor:pointer;
+  text-align:left; font-size:13px; transition:all .15s;
+}
+.cta-btn:hover{background:var(--sky-light); border-color:var(--sky); color:var(--navy)}
+.cta-btn .label{font-weight:700}
+.cta-btn .url{font-size:11px; color:var(--muted); font-weight:500; word-break:break-all; font-family:ui-monospace,Menlo,monospace}
+.cta-btn.primary{background:var(--sky); color:#fff; border-color:var(--sky)}
+.cta-btn.primary:hover{background:var(--navy)}
+.cta-btn.primary .url{color:rgba(255,255,255,.85)}
+
+/* Copy button */
+.copy-btn{
+  display:none; vertical-align:middle;
+  background:#fff; border:1px solid var(--border);
+  padding:3px 9px; border-radius:6px;
+  font-size:12px; cursor:pointer; color:var(--sky);
+  margin-left:6px; font-weight:700;
+}
+body.mode-dm .copy-btn{display:inline-block}
+.copy-btn:hover{background:var(--sky-light); border-color:var(--sky)}
+.copy-btn.copied{background:var(--ok-bg); border-color:var(--ok); color:var(--ok)}
+
+/* Channel hide/show */
+body.mode-phone .dm-only{display:none !important}
+body.mode-dm .phone-only{display:none !important}
+
+/* Tabs */
+.tab-nav{
+  display:flex; gap:4px;
+  background:#fff; border:1px solid var(--border);
+  border-radius:var(--r); padding:5px;
+  margin-bottom:16px; overflow-x:auto;
+  position:sticky; top:182px; z-index:30; box-shadow:var(--shadow);
+}
+.tab-btn{
+  flex:1; min-width:max-content;
+  padding:10px 14px; border:0; background:transparent;
+  color:var(--muted); font-weight:700; font-size:14px;
+  cursor:pointer; border-radius:7px; white-space:nowrap;
+  transition:all .15s;
+}
+.tab-btn:hover{color:var(--navy); background:var(--bg)}
+.tab-btn.active{background:var(--navy); color:#fff}
+.tab-panel{display:none; padding-top:40px; scroll-margin-top:220px}
+.tab-panel.active{display:block}
+.tab-title{
+  font-size:19px; color:var(--navy); margin-bottom:14px;
+  display:flex; align-items:baseline; gap:8px;
+  scroll-margin-top:220px;
+}
+.tab-title small{font-size:12.5px; color:var(--muted); font-weight:500}
+
+.tab-btn .tab-short{display:none}
+@media (max-width:960px){
+  .tab-nav{top:170px; flex-wrap:nowrap}
+  .tab-btn{padding:8px 10px; font-size:12px}
+  .tab-panel{padding-top:24px; scroll-margin-top:200px}
+  .tab-title{scroll-margin-top:200px}
+}
+@media (max-width:600px){
+  .tab-btn .tab-full{display:none}
+  .tab-btn .tab-short{display:inline}
+  .tab-btn{padding:8px 8px; font-size:12px; flex:1; min-width:0}
+}
+
+/* Core (Tab 1) */
+.core-grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:14px;
+}
+.core-card{
+  background:#fff; border:1px solid var(--border); border-radius:var(--r);
+  padding:16px; box-shadow:var(--shadow); border-top:3px solid var(--sky);
+}
+.core-card h4{font-size:14px; color:var(--navy); margin-bottom:10px}
+.core-table{width:100%; font-size:13px; border-collapse:collapse}
+.core-table td{padding:6px 0; vertical-align:top; border-bottom:1px dashed var(--border)}
+.core-table tr:last-child td{border-bottom:0}
+.core-table td:first-child{color:var(--muted); width:80px; font-weight:600}
+.core-card ul{padding-left:18px; font-size:13px}
+.highlight-quote{
+  background:var(--amber-bg); border-left:3px solid var(--amber);
+  padding:10px 12px; border-radius:0 8px 8px 0;
+  font-size:13px; margin-top:10px; line-height:1.65;
+}
+.diff-one-liner{
+  background:linear-gradient(135deg,var(--navy),var(--sky-2));
+  color:#fff; padding:18px 20px; border-radius:var(--r);
+  font-weight:700; font-size:15px; line-height:1.6;
+  box-shadow:var(--shadow-2);
+}
+
+/* Types (Tab 2) */
+.type-grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(360px,1fr)); gap:14px;
+}
+.type-card{
+  background:#fff; border:1px solid var(--border); border-radius:var(--r);
+  padding:18px; box-shadow:var(--shadow);
+}
+.type-head{display:flex; align-items:center; gap:10px; margin-bottom:8px}
+.type-num{
+  flex:0 0 32px; height:32px; border-radius:8px; background:var(--navy);
+  color:#fff; display:flex; align-items:center; justify-content:center;
+  font-weight:800; font-size:14px;
+}
+.type-name{font-size:15px; color:var(--navy)}
+.type-persona{color:var(--muted); font-size:12px; margin-bottom:10px; padding-left:42px}
+.type-mission{
+  background:var(--sky-light); color:var(--navy);
+  padding:8px 12px; border-radius:6px; font-size:12px; font-weight:600; margin-bottom:12px;
+}
+.type-section{margin-bottom:12px}
+.type-section h5{font-size:12px; color:var(--text-2); margin-bottom:6px; letter-spacing:.03em; text-transform:uppercase}
+.script-line{
+  background:var(--bg); border-radius:6px; padding:8px 10px;
+  font-size:13px; line-height:1.6; margin-bottom:6px;
+  display:flex; align-items:flex-start; gap:8px;
+}
+.script-line .num{color:var(--sky); font-weight:800; flex:0 0 auto}
+.script-line .body{flex:1}
+.forb-line{
+  background:var(--warn-bg); border-left:3px solid var(--warn);
+  padding:6px 10px; border-radius:0 6px 6px 0; font-size:12px; margin-bottom:4px;
+}
+.next-action{
+  border-top:1px dashed var(--border); padding-top:10px; margin-top:10px;
+  font-size:12px; color:var(--text-2);
+}
+.next-action b{color:var(--navy)}
+
+/* FAQ (Tab 3) */
+.faq-search{
+  width:100%; padding:12px 16px;
+  border:1px solid var(--border-2); border-radius:8px;
+  font-size:15px; margin-bottom:14px; background:#fff;
+  box-shadow:var(--shadow);
+}
+.faq-search:focus{outline:0; border-color:var(--sky); box-shadow:0 0 0 3px rgba(46,134,217,.15)}
+.faq-cat{margin-bottom:18px}
+.faq-cat-title{
+  font-size:12px; color:var(--sky-2); letter-spacing:.08em;
+  text-transform:uppercase; font-weight:800;
+  border-bottom:2px solid var(--sky-light); padding-bottom:5px; margin-bottom:8px;
+}
+.faq-item{
+  background:#fff; border:1px solid var(--border); border-radius:8px;
+  margin-bottom:6px; transition:all .15s;
+}
+.faq-item.open{border-color:var(--sky); box-shadow:var(--shadow-2)}
+.faq-item.hidden{display:none}
+.faq-q{
+  padding:12px 16px; cursor:pointer;
+  font-weight:700; color:var(--text); font-size:14px;
+  display:flex; justify-content:space-between; align-items:center; gap:10px;
+}
+.faq-q .toggle{color:var(--sky); font-weight:800; flex:0 0 auto; font-size:18px}
+.faq-item.open .faq-q .toggle{transform:rotate(45deg)}
+.faq-a{
+  padding:0 16px 14px; color:var(--text-2); font-size:14.5px; line-height:1.7;
+  display:none;
+}
+.faq-item.open .faq-a{display:block}
+.faq-a ul{margin-top:6px}
+
+/* Diff (Tab 4) */
+.diff-grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:14px; margin-bottom:18px;
+}
+.diff-card{
+  background:#fff; border:1px solid var(--border); border-radius:var(--r);
+  padding:16px; box-shadow:var(--shadow);
+  border-top:3px solid var(--sky);
+}
+.diff-num{
+  display:inline-block; background:var(--sky); color:#fff;
+  padding:2px 10px; border-radius:999px; font-weight:800; font-size:11px;
+  margin-bottom:8px;
+}
+.diff-card h4{font-size:14px; color:var(--navy); margin-bottom:8px}
+.diff-card .body{font-size:13px; color:var(--text-2); margin-bottom:8px}
+.diff-card .quote{
+  background:var(--amber-bg); border-left:3px solid var(--amber);
+  padding:8px 10px; border-radius:0 6px 6px 0; font-size:12px; line-height:1.6; margin-top:8px;
+}
+.subhead{
+  font-size:14px; color:var(--navy); margin:18px 0 10px;
+  padding-bottom:6px; border-bottom:2px solid var(--sky-light);
+}
+.trend-grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:10px;
+}
+.trend-card{
+  background:var(--sky-light); border-left:3px solid var(--sky);
+  padding:11px 14px; border-radius:0 8px 8px 0; font-size:12px;
+}
+.trend-card .label{font-size:10px; color:var(--sky-2); font-weight:800; letter-spacing:.05em; text-transform:uppercase; margin-bottom:4px}
+.objection-table{
+  width:100%; border-collapse:collapse; background:#fff;
+  border:1px solid var(--border); border-radius:var(--r); overflow:hidden;
+  font-size:13px; box-shadow:var(--shadow);
+}
+.objection-table th{
+  background:var(--navy); color:#fff; padding:10px 12px;
+  font-weight:700; font-size:12px; text-align:left;
+}
+.objection-table td{
+  padding:11px 12px; border-bottom:1px solid var(--border); vertical-align:top;
+}
+.objection-table tr:last-child td{border-bottom:0}
+.objection-table .issue{font-weight:700; color:var(--navy); width:24%}
+
+/* Checklist (Tab 5) */
+.checklist-intro{
+  background:var(--amber-bg); border-left:3px solid var(--amber); border-radius:0 8px 8px 0;
+  padding:12px 14px; margin-bottom:14px; font-size:13px;
+}
+.cl-item{
+  background:#fff; border:1px solid var(--border); border-radius:var(--r);
+  padding:14px 16px; margin-bottom:10px; transition:all .15s;
+}
+.cl-item.disq{background:var(--warn-bg); border-color:var(--warn)}
+.cl-head{display:flex; align-items:center; gap:10px; margin-bottom:6px}
+.cl-num{
+  flex:0 0 26px; height:26px; border-radius:6px; background:var(--sky);
+  color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px;
+}
+.cl-topic{font-weight:700; font-size:14px; color:var(--navy)}
+.cl-q{font-size:13px; color:var(--text-2); margin-bottom:8px; padding-left:36px}
+.opts{display:flex; flex-wrap:wrap; gap:6px; padding-left:36px; margin-bottom:6px}
+.opts label{
+  padding:6px 12px; border:1px solid var(--border); background:#fff;
+  border-radius:999px; font-size:12px; cursor:pointer; user-select:none; transition:all .12s;
+}
+.opts label:hover{border-color:var(--sky); color:var(--navy)}
+.opts label input{display:none}
+.opts label.on{background:var(--sky); color:#fff; border-color:var(--sky)}
+.opts label.disq.on{background:var(--warn); border-color:var(--warn)}
+.cl-memo{
+  width:calc(100% - 36px); margin-left:36px; padding:8px 10px;
+  border:1px solid var(--border); border-radius:6px; font-size:12px; resize:vertical; min-height:36px; font-family:inherit;
+}
+.cl-note{padding-left:36px; font-size:11px; color:var(--muted); margin-top:4px}
+.disq-warn{
+  display:none; background:var(--warn); color:#fff;
+  padding:8px 12px; border-radius:6px; margin:10px 0 0 36px; font-size:12px; font-weight:700;
+}
+.cl-item.disq .disq-warn{display:block}
+.cl-item.disq .cl-num{background:var(--warn)}
+.disq-summary{
+  background:var(--warn); color:#fff; padding:14px 18px; border-radius:var(--r);
+  margin-top:14px; display:none; font-weight:700;
+}
+.disq-summary.show{display:block}
+.disq-summary .reasons{margin-top:6px; font-weight:500; font-size:13px; opacity:.95}
+
+.branch-table{
+  width:100%; border-collapse:collapse; background:#fff;
+  border:1px solid var(--border); border-radius:var(--r); overflow:hidden;
+  font-size:14px; margin-top:6px;
+}
+.branch-table th{background:var(--bg); color:var(--navy); padding:9px 12px; font-size:12.5px; text-align:left}
+.branch-table td{padding:9px 12px; border-top:1px solid var(--border); vertical-align:top}
+.usage-rules{
+  background:var(--sky-light); border-left:3px solid var(--sky); border-radius:0 8px 8px 0;
+  padding:12px 14px; margin-top:14px;
+}
+.usage-rules ul{padding-left:20px; font-size:14px}
+
+/* Sheet (Tab 6) */
+.state-grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; margin-bottom:18px;
+}
+.state-card{
+  background:#fff; border:1px solid var(--border); border-radius:var(--r); padding:16px; box-shadow:var(--shadow);
+  border-top:4px solid var(--muted);
+}
+/* state-card 상단 컬러바 — 상태별 즉각 식별 */
+.state-card:has(.b-부재){border-top-color:var(--muted)}
+.state-card:has(.b-관심){border-top-color:var(--sky)}
+.state-card:has(.b-신청예정){border-top-color:var(--amber)}
+.state-card:has(.b-신청완료){border-top-color:var(--sky-2)}
+.state-card:has(.b-수강가능){border-top-color:var(--ok); box-shadow:var(--shadow-2)}
+.state-card:has(.b-부적합보류){border-top-color:var(--warn)}
+.state-badge{
+  display:inline-block; padding:4px 12px; border-radius:999px;
+  font-size:12.5px; font-weight:800; margin-bottom:10px;
+}
+.b-부재{background:#F1F5F9; color:#475569}
+.b-관심{background:#DBEAFE; color:#1E40AF}
+.b-신청예정{background:#FEF3C7; color:#92400E}
+.b-신청완료{background:#D1FAE5; color:#065F46}
+.b-수강가능{background:#DCFCE7; color:#14532D; border:1px solid #86EFAC}
+.b-부적합{background:#FEE2E2; color:#991B1B}
+.b-보류{background:#E9D5FF; color:#5B21B6}
+.state-card .crit{font-size:13px; color:var(--text-2); margin-bottom:10px; line-height:1.65}
+.state-card .crit b{color:var(--navy)}
+.state-card .next{
+  background:var(--bg); border-radius:6px; padding:8px 10px; font-size:13px; line-height:1.65;
+}
+.state-card .next b{color:var(--sky-2)}
+
+.flow-diagram{
+  background:#fff; border:1px solid var(--border); border-radius:var(--r);
+  padding:18px; margin-bottom:18px; overflow-x:auto;
+}
+.flow-line{
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+  margin-bottom:10px; font-size:13px; font-weight:700;
+}
+.flow-line .pill{
+  padding:8px 14px; border-radius:999px; font-size:12px; font-weight:800; white-space:nowrap;
+}
+.arrow{color:var(--muted); font-weight:800}
+
+.input-rules{
+  background:var(--amber-bg); border-left:3px solid var(--amber); border-radius:0 8px 8px 0;
+  padding:12px 14px; margin-top:14px; font-size:13px;
+}
+.input-rules ul{padding-left:20px}
+
+/* Admin */
+.admin-toggle{
+  position:fixed; bottom:18px; right:18px; z-index:60;
+  background:var(--navy); color:#fff;
+  border:0; padding:10px 16px; border-radius:999px;
+  cursor:pointer; box-shadow:var(--shadow-2);
+  font-size:12px; font-weight:800;
+}
+.admin-toggle:hover{background:var(--navy-deep)}
+.admin-modal{
+  position:fixed; inset:0; background:rgba(11,31,58,.55); z-index:100;
+  display:none; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(2px);
+}
+.admin-modal.open{display:flex}
+.admin-modal .panel{
+  background:#fff; border-radius:var(--r); padding:24px;
+  max-width:760px; width:100%; max-height:90vh; overflow-y:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,.3);
+}
+.admin-modal h2{
+  color:var(--navy); margin-bottom:14px; padding-bottom:10px;
+  border-bottom:2px solid var(--sky-light); display:flex; align-items:center; gap:8px;
+}
+.admin-section{margin-bottom:20px}
+.admin-section h3{font-size:13px; color:var(--sky-2); margin-bottom:8px; text-transform:uppercase; letter-spacing:.05em}
+.admin-section .field{
+  display:flex; gap:10px; margin-bottom:6px; align-items:center; font-size:13px;
+}
+.admin-section .field code{
+  background:var(--bg); padding:3px 8px; border-radius:4px;
+  font-family:ui-monospace,Menlo,monospace; font-size:12px; flex:0 0 auto; color:var(--sky-2); font-weight:700;
+}
+.admin-section .field input{
+  flex:1; padding:6px 10px; border:1px solid var(--border); border-radius:6px; font-size:12px; font-family:inherit;
+}
+.admin-close{
+  background:var(--sky); color:#fff; border:0; padding:10px 18px;
+  border-radius:8px; cursor:pointer; font-weight:700; margin-top:10px;
+}
+.admin-close:hover{background:var(--navy)}
+.warn-box{
+  background:var(--warn-bg); border-left:3px solid var(--warn); border-radius:0 6px 6px 0;
+  padding:10px 12px; font-size:12px; color:var(--warn); font-weight:600; margin-bottom:14px;
+}
+
+/* v1.2 — Tab1 2x2 grid + guide card + trigger box + category badges */
+.core-grid-2x2{display:grid; grid-template-columns:repeat(2,1fr); gap:14px}
+@media (max-width:760px){.core-grid-2x2{grid-template-columns:1fr}}
+.guide-card{
+  border-top-color:var(--ok) !important;
+  background:linear-gradient(180deg,var(--ok-bg),#fff);
+  position:relative;
+}
+.guide-card::after{
+  content:'📋'; position:absolute; top:12px; right:14px; font-size:22px; opacity:.7;
+}
+.guide-card h4{color:var(--ok); padding-right:30px}
+.guide-card .guide-lead{
+  background:#fff; border:1px solid var(--ok); border-radius:6px;
+  padding:10px 12px; font-size:13px; line-height:1.65; margin-bottom:12px;
+  color:var(--text); font-weight:600;
+}
+.guide-card .subhead-mini{
+  font-size:11px; color:var(--ok); font-weight:800;
+  letter-spacing:.05em; text-transform:uppercase; margin:12px 0 6px;
+}
+.guide-card .checklist-style{list-style:none; padding-left:0; margin:0}
+.guide-card .checklist-style li{
+  padding:7px 0 7px 26px; position:relative; font-size:13px;
+  border-bottom:1px dashed var(--border); line-height:1.55;
+}
+.guide-card .checklist-style li::before{
+  content:'☐'; position:absolute; left:4px; top:7px; color:var(--ok); font-weight:800;
+}
+.guide-card .checklist-style li:last-child{border-bottom:0}
+.guide-card .ops-rules{
+  background:var(--bg); border-radius:6px; padding:10px 12px; margin-top:8px;
+  font-size:12px; line-height:1.7; color:var(--text-2);
+}
+.guide-card .ops-rules b{color:var(--navy)}
+
+.guide-trigger-box{
+  background:linear-gradient(135deg,#dcfce7,#e0f2fe);
+  border:2px solid var(--ok); border-radius:var(--r);
+  padding:16px 20px; margin-bottom:16px; box-shadow:var(--shadow);
+}
+.guide-trigger-box h3{
+  color:#14532d; font-size:14px; margin-bottom:8px;
+  display:flex; align-items:center; gap:6px;
+}
+.guide-trigger-box h3::before{content:'✅'}
+.guide-trigger-box .desc{font-size:13px; margin-bottom:10px; color:var(--text); line-height:1.65}
+.guide-trigger-box .conditions{
+  background:#fff; border-radius:8px; padding:12px 16px; margin-bottom:10px; border:1px solid #86efac;
+}
+.guide-trigger-box .conditions .label{font-size:11px; color:var(--ok); font-weight:800; letter-spacing:.05em; text-transform:uppercase; margin-bottom:6px}
+.guide-trigger-box .conditions ol{padding-left:24px; margin:4px 0; font-size:13px; line-height:1.85}
+.guide-trigger-box .conditions li{margin-bottom:2px}
+.guide-trigger-box .caveat{
+  background:var(--warn-bg); border-left:3px solid var(--warn);
+  padding:10px 14px; border-radius:0 6px 6px 0; font-size:12px; color:var(--text-2); line-height:1.7;
+}
+.guide-trigger-box .caveat .label{font-size:11px; color:var(--warn); font-weight:800; margin-bottom:4px; display:block}
+.guide-trigger-box .caveat ul{padding-left:18px; margin:4px 0}
+
+.category-badges{
+  background:#fff; border:1px solid var(--border); border-radius:var(--r);
+  padding:14px 18px; margin-bottom:16px; box-shadow:var(--shadow-2);
+}
+.category-badges .label{
+  font-size:12px; color:var(--navy); font-weight:800;
+  letter-spacing:.05em; text-transform:uppercase; margin-bottom:10px;
+}
+.category-badges .badges{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px}
+.cat-badge{
+  padding:8px 18px; border-radius:999px;
+  font-size:14px; font-weight:800; border:2px solid;
+}
+.cat-수강예정{background:#FEF3C7; color:#92400E; border-color:#FBBF24}
+.cat-수강확정{background:#DCFCE7; color:#14532D; border-color:#22C55E}
+.cat-취소{background:#FEE2E2; color:#991B1B; border-color:#FCA5A5}
+.category-badges .note{font-size:13px; color:var(--text-2); line-height:1.65}
+.category-badges .note b{color:var(--navy)}
+
+.b-수강확정{background:#DCFCE7; color:#14532D; border:1px solid #86EFAC}
+.b-부적합보류{background:#FEF3C7; color:#92400E; border:1px solid #FBBF24}
+
+/* v1.3 — 핵심 강조 클래스 (v3.3 — 폰트 축소: 한 줄 또는 자연 2줄 wrap) */
+.key-metric{
+  font-size:22px; font-weight:800; color:var(--navy);
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  font-variant-numeric:tabular-nums;
+  line-height:1.3; display:inline-block;
+  max-width:100%; overflow-wrap:break-word;
+}
+.key-label{font-size:12.5px; font-weight:800; color:var(--muted); letter-spacing:.05em; text-transform:uppercase; margin-bottom:4px}
+.key-message{font-size:17px; font-weight:900; color:var(--navy); line-height:1.45}
+.key-flow{font-size:18px; font-weight:900; color:var(--ok); line-height:1.5}
+.sub-note{font-size:12.5px; color:var(--muted); line-height:1.6}
+
+.must-check-grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px;
+  margin-bottom:18px;
+}
+.must-check-card{
+  background:linear-gradient(135deg,var(--sky),var(--navy));
+  color:#fff; padding:18px 22px; border-radius:var(--r);
+  font-size:18px; font-weight:800; line-height:1.4;
+  box-shadow:var(--shadow-2); display:flex; align-items:center; gap:10px;
+  min-height:84px;
+}
+.must-check-card::before{
+  content:'?'; font-size:16px; color:var(--navy);
+  background:#fde68a; border-radius:50%;
+  width:30px; height:30px; flex:0 0 30px; font-weight:900;
+  display:inline-flex; align-items:center; justify-content:center;
+}
+@media (max-width:760px){
+  .key-metric{font-size:19px}
+  .key-message{font-size:15px}
+  .key-flow{font-size:16px}
+  .must-check-card{font-size:15px; padding:14px 16px; min-height:auto}
+}
+
+@media print{
+  .topbar,.sidebar,.tab-nav,.admin-toggle,.copy-btn,.sidebar-toggle,.faq-search{display:none !important}
+  .layout{display:block; padding:0; margin:0; max-width:none}
+  .tab-panel{display:block !important; page-break-after:always}
+  .card,.core-card,.type-card,.diff-card,.state-card,.faq-item{box-shadow:none; break-inside:avoid}
+  body{background:#fff}
+  .faq-a{display:block !important}
+}
+
+/* === v2 신규 클래스 === */
+.recruit-link-bar{
+  position:sticky; top:0; z-index:60;
+  background:var(--navy);
+  padding:10px 20px;
+  display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap;
+  color:#fff; font-size:13.5px; font-weight:600;
+  border-bottom:2px solid var(--sky);
+}
+.recruit-link-bar .label{
+  font-size:12px; font-weight:700; letter-spacing:.05em;
+  background:var(--sky); padding:4px 10px; border-radius:999px;
+}
+.recruit-link-bar a, .recruit-link-bar .url{
+  color:#fff; font-weight:700; text-decoration:underline;
+  word-break:break-all;
+}
+.recruit-link-bar.placeholder{background:#5C6B82}
+.recruit-link-bar.placeholder .url{
+  text-decoration:none; opacity:.85; font-style:italic;
+}
+
+.info-grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:14px; margin-bottom:18px;
+}
+.info-card{
+  background:var(--card); border:1px solid var(--border); border-radius:var(--r);
+  padding:16px 18px; box-shadow:var(--shadow); border-top:4px solid var(--navy);
+}
+.info-card h4{font-size:15px; color:var(--navy); margin-bottom:10px; letter-spacing:.02em}
+.info-card .info-table{width:100%; font-size:14px; border-collapse:collapse}
+.info-card .info-table td{padding:7px 0; vertical-align:top; border-bottom:1px dashed var(--border)}
+.info-card .info-table tr:last-child td{border-bottom:0}
+.info-card .info-table td:first-child{color:var(--muted); width:90px; font-weight:600}
+
+/* 카드 상단 컬러바 — 4종 카테고리별 색상 */
+.info-grid .info-card:nth-child(1){border-top-color:var(--navy-2)}
+.info-grid .info-card:nth-child(2){border-top-color:var(--ok); box-shadow:var(--shadow-2)}
+.info-grid .info-card:nth-child(2) .key-metric{color:var(--ok)}
+.info-grid .info-card:nth-child(3){border-top-color:var(--sky)}
+.info-grid .info-card:nth-child(4){border-top-color:var(--navy)}
+
+.curriculum-link-card{
+  background:linear-gradient(135deg, var(--navy), var(--navy-2));
+  color:#fff; padding:18px 22px; border-radius:var(--r); margin-bottom:16px;
+  display:flex; flex-direction:column; gap:8px;
+}
+.curriculum-link-card .one-line{font-size:16px; font-weight:700; line-height:1.5}
+.curriculum-link-card a.cur-btn{
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(255,255,255,.22); color:#fff; padding:8px 16px; border-radius:8px;
+  font-weight:700; font-size:14px; text-decoration:none; align-self:flex-start;
+  border:1px solid rgba(255,255,255,.3);
+}
+.curriculum-link-card a.cur-btn:hover{background:rgba(255,255,255,.32)}
+.curriculum-link-card .pending-note{font-size:11.5px; opacity:.85; font-style:italic}
+
+.month-table{
+  width:100%; border-collapse:collapse; font-size:14px; margin-bottom:8px;
+  background:var(--card); border:1px solid var(--border); border-radius:var(--r); overflow:hidden;
+}
+.month-table th{
+  background:var(--sky-light); color:var(--navy); padding:8px 10px; text-align:left;
+  font-weight:700; font-size:12.5px; letter-spacing:.03em;
+}
+.month-table td{padding:10px; vertical-align:top; border-bottom:1px solid var(--border)}
+.month-table tr:last-child td{border-bottom:0}
+.month-table td:first-child{
+  font-weight:800; color:var(--navy); width:96px; white-space:nowrap;
+  background:var(--bg);
+}
+.month-table .area{font-weight:700; color:var(--navy)}
+.month-table .desc{color:var(--text-2); font-size:12.5px; margin-top:2px}
+.month-table .badge-proj{
+  display:inline-block; background:var(--ok-bg); color:var(--ok);
+  padding:2px 8px; border-radius:999px; font-size:11px; font-weight:700; margin-right:4px;
+}
+.curriculum-disclaimer{
+  background:var(--amber-bg); border-left:3px solid var(--amber); border-radius:0 8px 8px 0;
+  padding:10px 14px; font-size:12.5px; color:var(--text-2); margin:8px 0 16px;
+}
+.curriculum-disclaimer b{color:var(--amber)}
+
+.why-card{
+  background:linear-gradient(135deg, var(--sky-light), #F0F6FC);
+  border-left:4px solid var(--sky);
+  padding:18px 22px; border-radius:0 var(--r) var(--r) 0; margin-bottom:16px;
+}
+.why-card h4{color:var(--navy); margin-bottom:8px; font-size:15px}
+.why-card .key-message{display:block; margin-bottom:10px}
+.why-card ul{font-size:14px; color:var(--text-2); padding-left:18px}
+.why-card li{margin-bottom:6px}
+
+.term-grid{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:12px;
+  margin-bottom:16px;
+}
+.term-card{
+  background:var(--card); border:1px solid var(--border); border-left:3px solid var(--navy);
+  border-radius:var(--r); padding:14px 16px;
+}
+.term-card .term{font-weight:800; color:var(--navy); font-size:15px; margin-bottom:4px}
+.term-card .full{font-size:11.5px; color:var(--muted); margin-bottom:6px; font-family:ui-monospace,Menlo,monospace}
+.term-card .desc{font-size:14px; color:var(--text-2); line-height:1.6; margin-bottom:6px}
+.term-card .map{font-size:12.5px; color:var(--ok); font-weight:700}
+
+.vs-table{
+  width:100%; border-collapse:collapse; font-size:14px; background:var(--card);
+  border:1px solid var(--border); border-radius:var(--r); overflow:hidden; margin-bottom:16px;
+}
+.vs-table th{
+  padding:10px 14px; text-align:left; font-size:12.5px; letter-spacing:.03em;
+  background:var(--bg); color:var(--text-2);
+}
+.vs-table th:first-child{width:120px}
+.vs-table th.vs-us{background:var(--navy); color:#fff}
+.vs-table td{padding:12px 14px; vertical-align:top; border-top:1px solid var(--border)}
+.vs-table .row-label{font-weight:700; color:var(--navy); width:120px; background:var(--bg)}
+.vs-table .vs-us-cell{background:var(--sky-light); font-weight:600; color:var(--navy)}
+
+.flow-card{
+  background:var(--card); border:1px solid var(--border); border-radius:var(--r);
+  padding:18px 22px; margin-bottom:14px; box-shadow:var(--shadow);
+}
+.flow-step{
+  display:flex; align-items:flex-start; gap:14px; padding:14px 0;
+  border-bottom:1px dashed var(--border);
+}
+.flow-step:last-child{border-bottom:0}
+.flow-num{
+  flex:0 0 auto; width:36px; height:36px; border-radius:50%;
+  background:var(--navy); color:#fff; display:inline-flex; align-items:center; justify-content:center;
+  font-weight:800; font-size:16px;
+}
+.flow-body{flex:1; min-width:0}
+.flow-title{font-weight:800; color:var(--navy); font-size:15px; margin-bottom:4px}
+.flow-detail{font-size:14px; color:var(--text-2); line-height:1.7}
+.flow-detail ul{padding-left:18px; margin-top:4px}
+.handoff-note{
+  background:var(--ok-bg); border-left:3px solid var(--ok); border-radius:0 8px 8px 0;
+  padding:12px 16px; font-size:14px; color:var(--text); margin-top:12px;
+}
+.handoff-note b{color:var(--ok)}
+
+.tab3-intro{
+  background:var(--card); border:1px solid var(--border); border-radius:var(--r);
+  padding:14px 18px; margin-bottom:14px;
+  font-size:14px; color:var(--text-2);
+}
+
+</style>
+</head>
+<body class="mode-phone">
+
+<div class="recruit-link-bar placeholder" id="recruitLinkBar">
+  <span class="label">모집 시트</span>
+  <span class="url" id="recruitLinkUrl">운영팀 입력 대기 — 배포 시 시트 URL 삽입</span>
+</div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="brand-mark">KT CLOUD TECH UP</span>
+      <h1>클라우드 네이티브 과정 컨택 가이드</h1>
+    </div>
+    <div class="meta-grid">
+      <div class="meta-item"><dt>모집 기간</dt><dd>2026.04.09 ~ 05.25</dd></div>
+      <div class="meta-item"><dt>교육 기간</dt><dd>2026.06.10 ~ 12.23 (7개월)</dd></div>
+      <div class="meta-item"><dt>모집 D-day</dt><dd><span class="dday" id="dday">계산중</span></dd></div>
+      <div class="meta-item"><dt>운영</dt><dd>KT cloud</dd></div>
+      <div class="meta-item"><dt>방식</dt><dd>온라인 실시간 / 평일 09–18시</dd></div>
+    </div>
+  </div>
+</header>
+
+<button class="sidebar-toggle" id="sidebarToggle">📋 사이드바 열기</button>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+
+    <div class="card">
+      <h3>채널 모드 <span class="badge" id="modeBadge">전화</span></h3>
+      <div class="channel-toggle" id="channelToggle">
+        <button data-mode="phone" class="active">📞 전화</button>
+        <button data-mode="dm">💬 DM·SNS</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>30초 오프닝 멘트</h3>
+      <div id="opening"></div>
+    </div>
+
+    <div class="card">
+      <h3>클로징 3패턴</h3>
+      <div id="closing"></div>
+      <div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.6">
+        <b>전환 시그널 키워드</b><br>
+        · "비전공인데 진짜 가능해요?"<br>
+        · "면접은 어떻게 보나요?"<br>
+        · "수강료가 어떻게 되죠?"<br>
+        · "노트북 없는데"<br>
+        · "직장 다니면서…" → <b style="color:var(--warn)">평일 09~18시 풀타임 가능 여부 즉시 확인</b>
+      </div>
+    </div>
+
+    <div class="card forbidden-card" id="forbiddenCard">
+      <h3 style="cursor:pointer" onclick="this.parentElement.classList.toggle('collapsed')">
+        ⚠ 금지어 / 주의 표현 <span class="toggle-arrow">▾</span>
+      </h3>
+      <ul class="forbidden-list" id="forbidden"></ul>
+    </div>
+
+  </aside>
+
+  <main class="content">
+    <nav class="tab-nav" id="tabNav">
+      <button class="tab-btn active" data-tab="info"><span class="tab-full">탭1 기본정보</span><span class="tab-short">정보</span></button>
+      <button class="tab-btn" data-tab="flow"><span class="tab-full">탭2 등록 진행방식</span><span class="tab-short">등록</span></button>
+      <button class="tab-btn" data-tab="check"><span class="tab-full">탭3 필수 체크</span><span class="tab-short">체크</span></button>
+    </nav>
+
+    <!-- ========================= 탭1 기본정보 ========================= -->
+    <section class="tab-panel active" data-tab="info">
+      <h2 class="tab-title">기본정보 <small>· 과정·커리큘럼·등록방식·왜 지금 배워야 하는가</small></h2>
+
+      <h3 class="subhead">과정 정보</h3>
+      <div class="info-grid" id="infoGrid"></div>
+
+      <h3 class="subhead">커리큘럼 안내</h3>
+      <div class="curriculum-link-card" id="curriculumLinkCard">
+        <div class="one-line">7개월 / 9개 핵심 영역 + 3종 프로젝트 + 취업·포트폴리오 + KT cloud 현직자 특강</div>
+        <a class="cur-btn" href="#" id="curriculumLink" target="_blank" rel="noopener">📄 커리큘럼 파일 바로보기</a>
+        <span class="pending-note" id="curriculumPending">⚠ 커리큘럼 파일 URL 운영팀 입력 대기 (현재는 파일 첨부 본 기준 요약)</span>
+      </div>
+
+      <h3 class="subhead">월별 한 줄 요약 (가안)</h3>
+      <table class="month-table" id="monthTable">
+        <thead><tr><th>월</th><th>주제</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="curriculum-disclaimer">
+        <b>⚠ 월별 분배는 가안</b>입니다. 커리큘럼 파일에는 9개 영역과 3종 프로젝트만 명시되어 있고 정확한 월별 일정은 KT cloud 측 공식 일정표 기준으로 안내해야 합니다.
+      </div>
+
+      <h3 class="subhead">왜 지금 배워야 하는가</h3>
+      <div class="why-card" id="whyCard"></div>
+
+      <h3 class="subhead">자주 듣는 용어 — 커리큘럼 매핑</h3>
+      <div class="term-grid" id="termGrid"></div>
+
+      <h3 class="subhead">타 교육기관과의 차이점</h3>
+      <table class="vs-table" id="vsTable">
+        <thead><tr><th>항목</th><th>일반 부트캠프</th><th class="vs-us">KT cloud 직접 운영 KDT</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <!-- ========================= 탭2 등록 진행방식 ========================= -->
+    <section class="tab-panel" data-tab="flow">
+      <h2 class="tab-title">등록 진행방식 <small>· 멘토는 '수강확정' 체크까지 → 이후 카드발급·수강신청은 구름(KT) 측</small></h2>
+
+      <div class="flow-card">
+        <h3 class="subhead" style="margin-top:0">2단계 핵심 흐름</h3>
+        <div class="flow-step">
+          <div class="flow-num">1</div>
+          <div class="flow-body">
+            <div class="flow-title">수업 참여 가능한지 확인 (필수 체크 3종)</div>
+            <div class="flow-detail">
+              평일 09~18시, 7개월 풀타임 참여 가능 / 국민내일배움카드 발급 가능 / PC·카메라 ON 가능
+              <ul>
+                <li>1개라도 불가 → <b>부적합</b> 처리, 차기 KDT 안내</li>
+                <li>3종 모두 가능 → 다음 단계 진행</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <div class="flow-body">
+            <div class="flow-title">모집시트 입력 + '수강확정' 선택</div>
+            <div class="flow-detail">
+              학생정보 / 동기·목표 / 협업·문제해결 / <b>트랙1 포트폴리오 또는 트랙2 면접</b> 선택 / 내부 상담결과 <b>'수강확정'</b> 체크
+              <ul>
+                <li>트랙1 (포트폴리오): 포트폴리오 링크 입력 필수</li>
+                <li>트랙2 (면접): 면접 가능 일정 입력</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="handoff-note">
+          <b>이후 진행</b>: 수강확정 처리된 학생 정보는 구름(KT) 측으로 전달되어 <b>국민내일배움카드 발급 안내 / Zoom 면접 진행 / 수강신청 절차</b> 등 후속 안내가 진행됩니다. (멘토는 '수강확정' 체크까지)
+        </div>
+      </div>
+
+      <h3 class="subhead">운영 시트 최종 카테고리 (3종)</h3>
+      <div class="category-badges">
+        <div class="badges">
+          <span class="cat-badge cat-수강예정">수강예정</span>
+          <span class="cat-badge cat-수강확정">수강확정</span>
+          <span class="cat-badge cat-취소">취소</span>
+        </div>
+        <div class="note">최종 카테고리는 위 3가지. 아래 상태값 6종은 <b>세부 운영을 위한 내부 관리값</b>입니다.</div>
+      </div>
+
+      <table class="vs-table" style="margin-top:10px">
+        <thead>
+          <tr><th>카테고리(시트 최종)</th><th>해당 상태값</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="row-label">수강예정</td>
+            <td>관심 있음 · 신청 예정 · 신청 완료 · 보류</td>
+          </tr>
+          <tr>
+            <td class="row-label">수강확정</td>
+            <td>수강 가능 (내부 상담결과 '수강 확정' 체크 완료)</td>
+          </tr>
+          <tr>
+            <td class="row-label">취소</td>
+            <td>부적합 또는 명확한 취소 의사</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.6">
+        ※ <b>'부적합 / 보류'</b> 상태값은 보류 사유(자금 협의 · KDT 이력 검토 · 카드 발급 대기 등) 시 <b>수강예정</b>으로, 부적합 사유 명확 시(자격 미충족 · 카메라 거부 · 풀타임 불가 등) <b>취소</b>로 카테고리 운영합니다.
+      </div>
+
+      <h3 class="subhead">상태값 6종 (컨택 관리 내부값)</h3>
+      <div class="state-grid" id="stateGrid"></div>
+
+      <h3 class="subhead">상태 전환 흐름</h3>
+      <div class="flow-diagram">
+        <div class="flow-line">
+          <span class="pill b-부재">부재</span><span class="arrow">→</span>
+          <span class="pill b-관심">관심 있음</span><span class="arrow">→</span>
+          <span class="pill b-신청예정">신청 예정</span><span class="arrow">→</span>
+          <span class="pill b-신청완료">신청 완료</span><span class="arrow">→</span>
+          <span class="pill b-수강가능">수강 가능</span>
+        </div>
+        <div class="flow-line" style="font-weight:500;font-size:12px;color:var(--muted)">
+          (3회 부재 / 망설임 / 자격 미충족 / 의사결정 지연) <span class="arrow">↓</span>
+          <span class="pill b-부적합보류">부적합 / 보류</span>
+          <span style="color:var(--muted);font-size:11px">— 어느 단계에서나 분기 / 1주 미응답 시 부재로 변경 / 부적합 명확 시 재컨택 금지</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================= 탭3 필수 체크 ========================= -->
+    <section class="tab-panel" data-tab="check">
+      <h2 class="tab-title">필수 체크 <small>· 첫 컨택 1~2분 안에 반드시 확인할 3가지 + FAQ + 분기</small></h2>
+
+      <h3 class="subhead">반드시 확인 — 3가지</h3>
+      <div class="must-check-grid">
+        <div class="must-check-card">평일 09~18시,<br>7개월 참여 가능?</div>
+        <div class="must-check-card">국민내일배움카드<br>발급 가능?</div>
+        <div class="must-check-card">PC · 카메라 ON<br>가능?</div>
+      </div>
+      <div class="tab3-intro">
+        위 3가지 중 <b>1개라도 불가 → 부적합 처리, 차기 KDT 안내, 재컨택 시도 금지</b>.<br>
+        3가지 모두 OK일 때만 시트 입력 안내로 진행하세요.
+      </div>
+
+      <h3 class="subhead">자주 받는 질문 (FAQ)</h3>
+      <input type="text" id="faqSearch" class="faq-search" placeholder="🔍 키워드 검색 (예: 노트북, 카메라, 수강료, 면접)">
+      <div id="faqList"></div>
+
+      <h3 class="subhead">대상 분기 — 4유형 빠른 응대</h3>
+      <table class="branch-table" id="branchTable">
+        <thead>
+          <tr><th>응답 유형</th><th>분기 유형</th><th>우선 점검 포인트</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <div class="usage-rules">
+        <b>체크리스트 사용 원칙</b>
+        <ul>
+          <li>"카드 발급 어려움 / 풀타임 참여 어려움 / 카메라 거절" 중 <b>1개만 해당돼도 부적합</b></li>
+          <li>부적합 처리 시 차기 KDT 안내만, <b>재컨택 시도 금지</b></li>
+          <li>모든 항목 OK → 강(强) 클로징 진입 가능</li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<button class="admin-toggle" id="adminToggle" title="내부 관리용 (admin)">🔒 내부 관리</button>
+
+<div class="admin-modal" id="adminModal">
+  <div class="panel">
+    <h2>🔒 내부 관리용 / 운영팀 입력 필요</h2>
+    <div class="warn-box" style="background:var(--amber-bg); color:var(--amber); border-left-color:var(--amber)">
+      📝 이 화면은 변수 항목 안내용입니다. 실제 값 변경은 HTML 파일의 <code style="background:#fff;padding:2px 6px;border-radius:4px;font-family:ui-monospace,Menlo,monospace">&lt;script&gt;</code> 안 <code style="background:#fff;padding:2px 6px;border-radius:4px;font-family:ui-monospace,Menlo,monospace">DATA</code> 객체를 직접 수정해 배포하세요.
+    </div>
+    <div class="warn-box">⚠ 이 영역은 고객에게 절대 노출하지 마세요. 운영 위탁 단위별 변수를 여기서 관리합니다.</div>
+
+    <div class="admin-section">
+      <h3>CTA 링크 변수 (배포 전 입력)</h3>
+      <div class="field"><code>zoom_interview</code><input type="text" placeholder="Zoom 면접 신청 페이지 URL"></div>
+      <div class="field"><code>recruit_post</code><input type="text" placeholder="모집공고 원문 URL"></div>
+      <div class="field"><code>kakao_channel</code><input type="text" placeholder="카카오톡 문의 채널 URL"></div>
+      <div class="field"><code>main_phone</code><input type="text" placeholder="캠프 안내 대표번호"></div>
+      <div class="field"><code>contact_direct</code><input type="text" placeholder="담당자 직통번호"></div>
+      <div class="field"><code>contact_name</code><input type="text" placeholder="담당자 이름"></div>
+    </div>
+
+    <div class="admin-section">
+      <h3>운영 위탁 단위별 변수</h3>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px">고객 노출 영역에는 위탁 단위 표기 일절 없음. 단일 "KT 클라우드 캠프 운영팀" 브랜드로만 노출.</div>
+      <div class="field"><code>branch_id</code><input type="text" placeholder="내부 관리용 식별자 (고객 미노출)"></div>
+    </div>
+
+    <div class="admin-section">
+      <h3>검수 보류 항목</h3>
+      <ul style="font-size:13px;line-height:1.8;padding-left:20px">
+        <li>내부 운영팀 자체 컨택 톤 가이드와의 충돌 검수</li>
+        <li>강(强) 클로징 "5/25 마감" 메시지 — 마감 후엔 폐기 또는 차기 KDT 모집으로 갱신</li>
+        <li>"KT 클라우드 캠프" 브랜드 사용에 대한 KT cloud 측 사전 승인 여부 확인</li>
+        <li>시트 컬럼명 운영팀 표준과의 정합성 검수</li>
+      </ul>
+    </div>
+
+    <button class="admin-close" id="adminClose">닫기</button>
+  </div>
+</div>
+
+<script>
+const DATA = {
+  recruitSheetUrl: "",
+  curriculumUrl: "",
+  opening: {
+    phone: "안녕하세요, ○○○님. KT 클라우드 캠프 운영팀 ○○○입니다. KT CLOUD TECH UP 클라우드 네이티브 과정 문의 주신 내용 확인하고 연락드렸습니다. 잠깐 1~2분 정도 통화 괜찮으실까요? 먼저 어떤 부분이 가장 궁금하셨는지 여쭤보고, 수강 가능 여부와 면접 신청 절차까지 빠르게 안내드리겠습니다.",
+    dm: "안녕하세요, ○○○님. KT 클라우드 캠프 운영팀 ○○○입니다. KT CLOUD TECH UP 클라우드 네이티브 과정 문의 주셔서 연락드립니다. 궁금하신 부분 확인 후, 수강 가능 여부와 Zoom 면접 신청 절차까지 안내드리겠습니다. 통화 가능하신 시간 있으실까요?"
+  },
+  closing: [
+    {tag:"강", cls:"tag-strong", desc:"흥미·의지 명확",
+      phone:"지금 Zoom 면접 신청 페이지 카톡으로 보내드릴게요. 마감이 5/25라 이번 주 안에 신청해두시는 게 좋습니다. 신청하시면 일정 잡히는 대로 KT 클라우드 캠프 운영팀에서 다시 연락드리겠습니다.",
+      dm:"신청 페이지: [URL] / 마감 5/25입니다. 신청 완료하시면 카톡 주세요, 면접 준비 도와드릴게요."},
+    {tag:"중", cls:"tag-mid", desc:"관심 있으나 망설임",
+      phone:"고객님, 자세한 자료 카톡으로 보내드리고 내일 같은 시간(○시)에 다시 한 번 통화 가능하실까요? 그때 신청 여부 결정하시면 됩니다.",
+      dm:"자료 보내드릴게요. 보고 결정되시면 카톡 주세요, 다음 단계 같이 봐드립니다. 마감일까지 [N]일 남았어요."},
+    {tag:"약", cls:"tag-weak", desc:"정보 수집 단계",
+      phone:"지금 결정 어렵겠죠. 모집공고 링크 카톡으로 보내드릴게요. 보시고 궁금한 점 생기시면 이 번호 그대로 다시 연락 주세요. KT 클라우드 캠프 운영팀 ○○○이었습니다, 감사합니다.",
+      dm:"모집공고: [URL] / 천천히 보시고 궁금한 점 카톡 주세요."}
+  ],
+  forbidden: [
+    {ph:'"100% 취업 보장됩니다"', alt:"수료 시 이력서·포트폴리오·면접 준비가 정규 과정에 포함되어 있습니다."},
+    {ph:'"타 부트캠프보다 훨씬 좋아요"', alt:"운영 주체가 KT cloud라는 점이 다른 점이에요."},
+    {ph:'"다 거짓말이에요" / "어디는 다 ○○해요"', alt:"어떤 교육과정도 취업 결과를 확정적으로 보장할 수는 없습니다."},
+    {ph:'"사실상 무료예요 / 무료에 가까워요"', alt:"본인 부담은 일부 있고, 시중 사설 부트캠프 대비 부담이 크게 낮은 편입니다."},
+    {ph:'"쉬워요 / 누구나 됩니다"', alt:"7개월 풀타임 의지가 필요합니다."},
+    {ph:'"수강료 ○○만원입니다" (단정)', alt:"정부 90% 이상 지원이고, 본인 부담은 모집공고 기준으로 안내드립니다."},
+    {ph:'"정부에서 다 내줘요"', alt:"자부담 일부 있습니다."},
+    {ph:'"정부 70% 의무화" / "인력 부족 공식 인정"', alt:"공공·금융·대기업 중심 클라우드 네이티브 전환 확대 → 클라우드 운영·DevOps 인재 수요 함께 증가."},
+    {ph:'"저희 ○○이 / 우리 ○○은"', alt:"KT 클라우드 캠프 운영팀입니다 / 저희 운영팀은"},
+    {ph:'"○○ 컨택 담당자입니다"', alt:"KT 클라우드 캠프 운영팀 ○○○입니다"}
+  ],
+  info: [
+    {title:"① 모집·교육 일정", rows:[
+      ["과정명","<span class='key-message'>KT CLOUD TECH UP 클라우드 네이티브 과정</span>"],
+      ["모집 기간","2026.04.09 ~ <b>05.25 마감</b>"],
+      ["개강일","<span class='key-metric'>2026.06.10</span>"],
+      ["수료일","2026.12.23"],
+      ["수강 기간","<span class='key-metric'>약 7개월</span>"],
+      ["수업 방식","<span class='key-metric'>평일 09:00~18:00</span><br><span class='sub-note'>100% 온라인 실시간 / Zoom / 카메라 ON 필수</span>"]
+    ]},
+    {title:"② 비용 · 지원금", rows:[
+      ["총 교육비","<span class='key-metric'>18,566,400원</span>"],
+      ["정부 지원","<b>90% 이상</b>"],
+      ["본인 부담","<span class='key-metric'>최대 60만 원</span><br><span class='sub-note'>· 총 교육비 대비 약 3.2% 수준 (최대 부담 기준)<br>· 국민취업지원제도 1유형 등 우대 시 더 낮아질 수 있음</span>"],
+      ["훈련장려금","<span class='key-metric'>월 최대 30만 원</span><br><span class='sub-note'>· 출석 조건 충족 시</span>"],
+      ["노트북 대여","신청자 한정 지원"]
+    ]},
+    {title:"③ 선발 · 자격", rows:[
+      ["학력 · 전공","<b>제한 없음</b><br><span class='sub-note'>· 고졸 / 비전공 / 비IT 모두 가능</span>"],
+      ["필수 자격","<b>국민내일배움카드</b> 발급 가능자"],
+      ["선발 트랙","<b>트랙1</b>: 포트폴리오 전형<br><b>트랙2</b>: 면접 전형 (Zoom 비대면)"],
+      ["면접 방식","Zoom 다대다 / 지원서 기반 질문"],
+      ["KDT 이력","1회 이후 자비 부담 증가 — 사전 확인 필요"]
+    ]},
+    {title:"④ 운영 · 수료 조건", rows:[
+      ["운영 주체","<b>KT cloud</b> (14개 데이터센터 자체 운영)"],
+      ["수료 조건","출석 90% 이상 + 평가 통과"],
+      ["프로젝트","기본 → 심화 → 실무 (3단계)"],
+      ["취업 트랙","이력서·포트폴리오·자기 PR·모의면접·커리어 멘토링 = <b>정규 과목</b>"],
+      ["특강","kt cloud <b>현직자 특강</b>"]
+    ]}
+  ],
+  curriculum: [
+    {month:"M1 (06월)", items:[
+      {area:"입과식 · 오리엔테이션", desc:"교육 목표·팀 구성·전체 일정 안내"},
+      {area:"Docker", desc:"원리·기본 개념 / Dockerfile / 이미지 최적화 / 보안 / 운영"},
+      {area:"협업 및 커뮤니케이션", desc:"팀워크·갈등 해결·도구 활용"}
+    ]},
+    {month:"M2 (07월)", items:[
+      {area:"Kubernetes", desc:"자원 효율화 / 오토스케일링 / 네임스페이스 / 네트워크 / 보안 / 클러스터 관리"},
+      {area:"클라우드 네트워킹", desc:"VPC · 서브넷 · 네트워크 최적화 · 고가용성 설계"}
+    ]},
+    {month:"M3 (08월)", items:[
+      {area:"CI/CD", desc:"빌드 자동화 / GitHub Actions / 배포 알람 / 파이프라인 설계"},
+      {area:"기본 프로젝트", desc:"EC2 + Docker + CI/CD + MSA 부하 분산", badge:"프로젝트"},
+      {area:"특강 ①", desc:"kt cloud 현직자 특강", badge:"특강"}
+    ]},
+    {month:"M4 (09월)", items:[
+      {area:"클라우드 보안 (DevSecOps)", desc:"위험 분석 / 보안 도구 / 클라우드 네이티브 보안 전략"},
+      {area:"API Gateway", desc:"요청 처리 · 보안 인증 · API 변환 프로세스"},
+      {area:"Service Mesh", desc:"Istio · Linkerd / 마이크로서비스 통신 · 트래픽 분산"}
+    ]},
+    {month:"M5 (10월)", items:[
+      {area:"모니터링 · 로그", desc:"하드웨어/앱 메트릭 / Grafana 대시보드 / 실시간 시각화"},
+      {area:"심화 프로젝트", desc:"AWS + EKS + Grafana + 보안 → 상업용 아키텍처 구현", badge:"프로젝트"},
+      {area:"특강 ②", desc:"kt cloud 현직자 특강", badge:"특강"}
+    ]},
+    {month:"M6 (11월)", items:[
+      {area:"실무 통합 프로젝트", desc:"AWS + Kubernetes + CI/CD + MSA + 보안 + IaC + 부트캠프 타직군 협업", badge:"프로젝트"},
+      {area:"해커톤", desc:"제한 시간 내 팀 아이디어 → 제품 설계 / 협업 집중"}
+    ]},
+    {month:"M7 (12월)", items:[
+      {area:"포트폴리오 · 이력서 · 자기 PR", desc:"전문 작성법 / 실전 면접 시뮬레이션 / 맞춤 피드백"},
+      {area:"취업 준비 역량 테스트 대비", desc:"자기소개서·경력기술서·면접 워크숍"},
+      {area:"커리어 성장 전략", desc:"학습 로드맵 / 멘토링 / 네트워크"},
+      {area:"프로젝트 발표회 · 수료식 (12.23)", desc:"개발 결과물 데모 / 시상 / 동문 네트워킹"}
+    ]}
+  ],
+  why: {
+    headline: "지금 클라우드 네이티브를 배워야 하는 이유 — 객관적 흐름만",
+    bullets: [
+      "<b>공공 클라우드 전환 확대</b>: 정부와 공공기관 중심으로 클라우드 네이티브 전환이 진행 중.",
+      "<b>민간·금융권도 동일 방향</b>: 대기업·금융권 시스템이 클라우드 기반으로 바뀌면서 <b>클라우드 운영·DevOps 인재 수요가 함께 늘고 있는 흐름</b>입니다.",
+      "<b>AI 시대에도 운영자 수요</b>: AI가 만든 코드를 운영할 사람은 더 필요해집니다. 인프라·운영 영역은 줄어들기 어려워요.",
+      "<b>비전공 진입 가능 IT 라인</b>: 코딩 천재일 필요 없이 <b>시스템 이해 + 자동화 도구 활용</b>이 핵심. 7개월 풀타임 의지가 가장 중요합니다."
+    ],
+    note: "※ 어떤 교육과정도 취업 결과를 확정적으로 보장할 수는 없습니다. \"보장\" 단어는 사용하지 않습니다."
+  },
+  terms: [
+    {term:"KDT", full:"K-Digital Training", desc:"고용노동부가 운영하는 디지털 분야 직업훈련 사업. 국민내일배움카드로 신청하며 정부가 수강료 90% 이상을 지원한다.", map:"📚 본 과정이 KDT 사업으로 운영됨"},
+    {term:"MSA", full:"Microservice Architecture", desc:"하나의 큰 애플리케이션을 작은 독립 서비스 여러 개로 쪼개서 운영하는 방식. 한 서비스에 장애가 나도 전체가 멈추지 않게 만드는 구조.", map:"📚 매핑: Service Mesh / 기본 프로젝트 / 실무 통합 프로젝트"},
+    {term:"IaC", full:"Infrastructure as Code", desc:"서버·네트워크·DB 같은 인프라를 코드로 관리해서 자동 배포·복구할 수 있게 하는 기법.", map:"📚 매핑: 실무 통합 프로젝트"},
+    {term:"EKS", full:"Elastic Kubernetes Service", desc:"AWS가 제공하는 매니지드 Kubernetes 서비스. K8s 클러스터를 직접 운영하지 않고 AWS에 맡기는 형태.", map:"📚 매핑: 심화 프로젝트 / 실무 통합 프로젝트"},
+    {term:"DevSecOps", full:"Development + Security + Operations", desc:"개발·운영 과정에 보안을 통합하는 접근. 보안 점검을 별도 단계가 아니라 CI/CD 파이프라인에 자동으로 끼워 넣는 방식.", map:"📚 매핑: 클라우드 보안"},
+    {term:"K8s / Kubernetes", full:"Container Orchestration", desc:"Docker 컨테이너를 자동으로 배포·확장·복구해주는 오케스트레이션 도구. 클라우드 네이티브의 핵심.", map:"📚 매핑: Kubernetes / 거의 모든 프로젝트"},
+    {term:"CI/CD", full:"Continuous Integration / Continuous Deployment", desc:"코드 변경이 일어나면 자동으로 빌드·테스트·배포되는 파이프라인. GitHub Actions 등으로 구현.", map:"📚 매핑: CI/CD / 기본 프로젝트"}
+  ],
+  vs: [
+    {label:"운영 주체", other:"사설 부트캠프 / 1인 강사 중심", us:"<b>KT cloud 자체 운영</b><br>(14개 데이터센터 운영사가 직접 커리큘럼·강사진 구성)"},
+    {label:"커리큘럼 폭", other:"Docker · K8s · AWS 정도 (3~4개 영역)", us:"<b>9개 영역 풀스택</b><br>(Docker · K8s · 보안 · CI/CD · Service Mesh · 모니터링 · API GW · 네트워킹 + 프로젝트)"},
+    {label:"프로젝트 구조", other:"개인 토이 프로젝트 1~2개", us:"<b>3단계 (기본 → 심화 → 실무)</b><br>실무 단계에서 디자이너·기획자·웹개발자와 다직군 협업"},
+    {label:"취업 트랙", other:"\"취업도 봐드려요\" 수준", us:"<b>이력서·포트폴리오·자기 PR·모의면접·멘토링 = 정규 과목</b><br>시간표에 들어가 있음"},
+    {label:"비용", other:"600~1,000만 원 (자비)", us:"<b>정부 90%↑ 지원 + 장려금 월 최대 30만</b><br>본인 부담은 일부 (정확한 금액은 모집공고 기준)"},
+    {label:"현직자 접점", other:"외부 강사 위주", us:"<b>KT cloud 현직자 특강 정규 편성</b><br>업계 사례·노하우 직접 전수"}
+  ],
+  faq: [
+    {cat:"자격·신청", q:"Q1. 학력·전공 제한 있어요?", a:"없습니다. <b>고졸·문과·예체능 모두 신청 가능</b>. 국민내일배움카드만 발급 가능하시면 됩니다."},
+    {cat:"자격·신청", q:"Q2. 국민내일배움카드 어떻게 발급받아요?", a:"HRD-Net(고용노동부) 사이트에서 신청. 미발급이면 신청 후 보통 1~2주 내 발급. 발급 전이라도 일단 모집 신청은 가능하니 빨리 발급 절차부터 시작하세요."},
+    {cat:"자격·신청", q:"Q3. 면접은 어떻게 보나요?", a:"<b>Zoom 비대면 다대다 면접</b>입니다. 지원서 기반 질문이라 학력보다는 <b>왜 이 분야인지·7개월 풀타임 가능한지</b>를 보세요. 합격 발표 후 본 교육 시작."},
+    {cat:"자격·신청", q:"Q4. 이전에 KDT 들은 적 있는데 또 가능해요?", a:"<b>국민내일배움카드 무료 1회 원칙</b>. 재참여 시 자비 부담이 늘어납니다. 정확한 본인 부담분은 카드 잔여 금액에 따라 달라지니 모집공고 확인 또는 KT 클라우드 캠프 운영팀에 직접 문의 필요."},
+    {cat:"운영 방식", q:"Q5. 100% 온라인이에요? 오프라인은 없어요?", a:"네, <b>100% 온라인 실시간</b>입니다. 정해진 강의장에 가는 게 아니라 <b>평일 09:00~18:00 Zoom 접속</b>입니다. 카메라 ON 필수, PC 필수."},
+    {cat:"운영 방식", q:"Q6. 노트북 없는데 가능해요?", a:"<b>신청자에 한해 노트북 대여 지원</b>해드립니다. 신청 시 같이 체크하시면 돼요."},
+    {cat:"운영 방식", q:"Q7. 카메라 꼭 켜야 해요?", a:"<b>네, 카메라 ON 필수</b>입니다. 출석 인증·집중도 관리용. 출석 90% 이상이 수료 조건이라 카메라 OFF는 결석 처리될 수 있어요."},
+    {cat:"운영 방식", q:"Q8. 중간에 못 따라가면 어떻게 해요?", a:"질의응답 시간·강사 1:1 상담 시간이 정규 운영돼요. 기본 → 심화 → 실무 <b>3단계 프로젝트</b> 구조라 단계별로 점검됩니다. 다만 출석 90% 미달 또는 평가 미달 시 수료증은 안 나옵니다."},
+    {cat:"비용·지원", q:"Q9. 수강료 얼마예요?", a:"<b>정부 90% 이상 지원</b>이고 본인 부담은 일부예요. 정확한 금액은 <b>모집공고 기준으로 안내드립니다</b>. (정부 지원 구간이 변동될 수 있어 KT 클라우드 캠프 운영팀이 항상 최신 공고 기준으로 안내드립니다.)"},
+    {cat:"비용·지원", q:"Q10. 훈련장려금이 뭐예요?", a:"교육 출석률 조건 충족 시 <b>월 최대 30만 원</b>이 지급됩니다. 고용노동부에서 KDT 참여자에게 주는 별도 장려금이에요."},
+    {cat:"비용·지원", q:"Q11. 중도 포기하면 위약금 있어요?", a:"<b>직접적인 위약금은 없습니다.</b> 다만 국민내일배움카드 잔여 한도가 차감되고, <b>다음 KDT 신청 시 자비 부담이 늘어날 수 있습니다</b>. 사실상의 비용이 발생하는 셈이라 시작 전 신중히 결정하세요."},
+    {cat:"수료·취업", q:"Q12. 취업 보장돼요?", a:"<b>보장은 안 됩니다.</b> 어떤 교육과정도 취업 결과를 확정적으로 보장할 수는 없습니다. 다만 이 과정은 <b>이력서·포트폴리오·자기 PR·모의면접·커리어 멘토링이 정규 과목</b>에 들어가요. 수료 시점에 취업 준비가 완성된 상태가 됩니다. 거기에 <b>공공·금융·대기업 시스템이 클라우드 네이티브로 전환되는 흐름이 확대되고 있어, 클라우드 운영·DevOps 인재 수요는 함께 늘고 있습니다.</b>"},
+    {cat:"수료·취업", q:"Q13. 수료 후 어떤 직무로 가나요?", a:"<ul><li>클라우드 엔지니어</li><li>DevOps / SRE</li><li>플랫폼 엔지니어</li><li>백엔드 (클라우드 네이티브 경험 보유)</li><li>클라우드 보안 (DevSecOps)</li><li>시스템 운영자 (클라우드 전환)</li></ul>신입 채용 + 직무 전환자 채용 둘 다 가능한 풀입니다."}
+  ],
+  branches: [
+    {now:"재학생", type:"전공생 / 졸업예정자", check:"전공 여부 추가 확인 / Java/Python 경험 / 졸업 시점 / 7개월 학사일정 충돌"},
+    {now:"졸업예정자", type:"전공생 / 졸업예정자", check:"졸업 시점이 교육 기간(2026.06.10~12.23) 내 가능한지"},
+    {now:"취업준비생", type:"취업준비생", check:"보장 단어 금기 / 정규 취업 트랙 강조 / 이전 KDT 이력"},
+    {now:"재직자", type:"IT 직장인 (직무 전환)", check:"재직 병행 불가 즉시 안내 / 퇴사 시점 결정은 본인"},
+    {now:"이직준비자", type:"IT 직장인 (또는 취업준비생 케이스 바이)", check:"무직 기간 부담 → 훈련장려금 안내"}
+  ],
+  states: [
+    {name:"부재", cls:"b-부재",
+      crit:"· 통화 연결 불가<br>· 문자 확인 없음<br>· 상담 미진행",
+      next:"· 1차 안내 문자 발송<br>· 재연락 진행<br>· <b>3회 이상 부재 시</b> 보류 또는 부재 유지"},
+    {name:"관심 있음", cls:"b-관심",
+      crit:"· 상담 완료<br>· 과정 관심 표현<br>· 수강 의사 있음<br>· 수업 진행 가능 여부 1차 확인 완료",
+      next:"· 구글시트 작성 안내<br>· 교육과정 지원 동기 및 목표 작성 요청<br>· 협업 및 문제해결 경험 답변 요청<br>· 트랙1 / 트랙2 선택 안내<br>· 트랙1 선택 시 포트폴리오 링크 작성 안내"},
+    {name:"신청 예정", cls:"b-신청예정",
+      crit:"· 지원 의사 확정<br>· 구글시트 작성 안내 완료<br>· 작성 예정 상태",
+      next:"· 구글시트 작성 리마인드<br>· 미작성자 재안내<br>· 작성 완료 후 후속 절차 안내 예정 전달"},
+    {name:"신청 완료", cls:"b-신청완료",
+      crit:"· 구글시트 작성 완료<br>· 교육과정 지원 동기 및 목표 작성 완료 (최대 500자)<br>· 협업 및 문제해결 경험 작성 완료 (최대 500자)<br>· 트랙 선택 완료<br>· <b>트랙1 선택자</b>: 포트폴리오 링크 작성 완료 (3개 이상 자유양식 제출)<br>· <b>트랙2 선택자</b>: Zoom 비대면 면접 진행 예정 또는 진행 완료",
+      next:"· 이후 국민내일배움카드 관련 안내 및 수강신청 안내는 <b>구름(KT) 측에서 진행 예정</b>으로 안내<br>· 수강 가능 단계부터 구름(KT) 측 안내 절차로 연결"},
+    {name:"수강 가능", cls:"b-수강가능",
+      crit:"· 면접 합격<br>· 본 교육 시작 확정<br>· 고객 측 입과 의사 재확인 완료<br>· <b>내부 상담결과란 '수강 확정' 체크</b>",
+      next:"· <b>구름(KT) 측 프로세스 안내 진행</b><br>· 수업 매뉴얼 안내<br>· 노트북 대여 등 추가 안내"},
+    {name:"부적합 / 보류", cls:"b-부적합보류",
+      crit:"<b>[보류 사유]</b><br>· 의사 결정 시간 필요<br>· 가족·자금 협의<br>· 이전 KDT 이력으로 자부담 검토<br>· 국민내일배움카드 발급 대기<br><b>[부적합 사유]</b><br>· 면접 불합격 / 자격 미충족 / 카드 발급 불가<br>· 7개월 풀타임 불가 / 카메라 ON 거부 / 재직 병행 희망",
+      next:"· 자료 발송<br>· 1주 후 재컨택<br>· 1주 미응답 시 부재로 변경<br>· <b>부적합 사유 명확 시</b> 차기 KDT 안내만 가능<br>· <b>부적합 사유 명확 시</b> 재컨택 시도 금지"}
+  ]
+};
+
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s));
+const esc = (s)=>String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function copyableText(html){
+  // strip HTML tags for copy
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  return div.textContent || div.innerText || '';
+}
+
+function copyBtn(text){
+  const safe = esc(text).replace(/"/g,'&quot;');
+  return `<button class="copy-btn" data-copy="${safe}">📋 복사</button>`;
+}
+
+function renderOpening(){
+  const c = $('#opening');
+  const p = DATA.opening.phone, d = DATA.opening.dm;
+  c.innerHTML = `
+    <div class="phone-only script-block"><div class="quote-body">${esc(p)}</div></div>
+    <div class="dm-only script-block"><div class="quote-body">${esc(d)} ${copyBtn(d)}</div></div>
+    <div style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.55">
+      <b>핵심 동작</b> ① 자기 소개 → "1~2분만" 시간 허락 ② 듣기 모드 전환 ③ 첫 답변에서 4유형 분류
+    </div>`;
+}
+
+function renderClosing(){
+  const c = $('#closing');
+  c.innerHTML = DATA.closing.map(x=>`
+    <div class="closing-row">
+      <div class="closing-tag ${x.cls}">${x.tag}</div>
+      <div class="closing-text">
+        <span class="closing-meta">${esc(x.desc)}</span>
+        <div class="phone-only">${esc(x.phone)}</div>
+        <div class="dm-only">${esc(x.dm)} ${copyBtn(x.dm)}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderForbidden(){
+  $('#forbidden').innerHTML = DATA.forbidden.map(x=>`
+    <li>
+      <span class="ph">${esc(x.ph)}</span>
+      <span class="alt">${esc(x.alt)}</span>
+    </li>
+  `).join('');
+}
+
+// renderCTA() removed — CTA 카드는 사이드바에서 비노출. DATA.cta는 admin 참조용으로만 유지.
+
+function renderRecruitLink(){
+  const url = (DATA.recruitSheetUrl||'').trim();
+  const bar = $('#recruitLinkBar');
+  const cell = $('#recruitLinkUrl');
+  if(url){
+    bar.classList.remove('placeholder');
+    cell.innerHTML = `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(url)}</a>`;
+  } else {
+    bar.classList.add('placeholder');
+    cell.textContent = '운영팀 입력 대기 — 배포 시 시트 URL 삽입';
+  }
+}
+
+function renderCurriculumLink(){
+  const url = (DATA.curriculumUrl||'').trim();
+  const link = $('#curriculumLink');
+  const pending = $('#curriculumPending');
+  if(url){
+    link.href = url;
+    link.style.display = '';
+    pending.style.display = 'none';
+  } else {
+    link.removeAttribute('href');
+    link.style.display = 'none';
+    pending.style.display = '';
+  }
+}
+
+function renderInfo(){
+  $('#infoGrid').innerHTML = DATA.info.map(c=>`
+    <div class="info-card">
+      <h4>${esc(c.title)}</h4>
+      <table class="info-table"><tbody>
+        ${c.rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${r[1]}</td></tr>`).join('')}
+      </tbody></table>
+    </div>
+  `).join('');
+}
+
+function renderMonthTable(){
+  $('#monthTable tbody').innerHTML = DATA.curriculum.map(m=>`
+    <tr>
+      <td>${esc(m.month)}</td>
+      <td>
+        ${m.items.map(it=>`
+          <div style="margin-bottom:6px">
+            ${it.badge?`<span class="badge-proj">${esc(it.badge)}</span>`:''}
+            <span class="area">${esc(it.area)}</span>
+            <div class="desc">${esc(it.desc)}</div>
+          </div>
+        `).join('')}
+      </td>
+    </tr>
+  `).join('');
+}
+
+function renderWhy(){
+  const w = DATA.why;
+  $('#whyCard').innerHTML = `
+    <h4>${esc(w.headline)}</h4>
+    <ul>${w.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>
+    <div class="sub-note" style="margin-top:8px">${esc(w.note)}</div>
+  `;
+}
+
+function renderTerms(){
+  $('#termGrid').innerHTML = DATA.terms.map(t=>`
+    <div class="term-card">
+      <div class="term">${esc(t.term)}</div>
+      <div class="full">${esc(t.full)}</div>
+      <div class="desc">${esc(t.desc)}</div>
+      <div class="map">${esc(t.map)}</div>
+    </div>
+  `).join('');
+}
+
+function renderVs(){
+  $('#vsTable tbody').innerHTML = DATA.vs.map(v=>`
+    <tr>
+      <td class="row-label">${esc(v.label)}</td>
+      <td>${v.other}</td>
+      <td class="vs-us-cell">${v.us}</td>
+    </tr>
+  `).join('');
+}
+
+function renderFAQ(){
+  const cats = {};
+  DATA.faq.forEach(f=>{ (cats[f.cat] = cats[f.cat] || []).push(f); });
+  const order = ["자격·신청","운영 방식","비용·지원","수료·취업"];
+  $('#faqList').innerHTML = order.map(cat=>`
+    <div class="faq-cat" data-cat="${esc(cat)}">
+      <div class="faq-cat-title">${esc(cat)}</div>
+      ${(cats[cat]||[]).map((f,idx)=>`
+        <div class="faq-item" data-q="${esc(f.q.toLowerCase())}" data-a="${esc(copyableText(f.a).toLowerCase())}">
+          <div class="faq-q">${esc(f.q)} <span class="toggle">+</span></div>
+          <div class="faq-a">${f.a} ${copyBtn(copyableText(f.a))}</div>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+// renderDiff/renderChecklist/updateDisqStatus removed in v2 — 탭 구조 6→3개로 압축됨
+
+function renderSheet(){
+  $('#stateGrid').innerHTML = DATA.states.map(s=>`
+    <div class="state-card">
+      <span class="state-badge ${s.cls}">${esc(s.name)}</span>
+      <div class="crit"><b>입력 기준</b><br>${esc(s.crit)}</div>
+      <div class="next"><b>후속 액션</b><br>${s.next}</div>
+    </div>
+  `).join('');
+}
+
+function renderBranch(){
+  $('#branchTable tbody').innerHTML = DATA.branches.map(b=>`
+    <tr>
+      <td><b>${esc(b.now)}</b></td>
+      <td><b style="color:var(--navy)">${esc(b.type)}</b></td>
+      <td>${esc(b.check)}</td>
+    </tr>
+  `).join('');
+}
+
+function bindTabs(){
+  $$('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const tab = btn.dataset.tab;
+      $$('.tab-btn').forEach(b=>b.classList.toggle('active', b===btn));
+      $$('.tab-panel').forEach(p=>p.classList.toggle('active', p.dataset.tab===tab));
+
+      requestAnimationFrame(()=>{
+        const recruitBar = document.querySelector('.recruit-link-bar');
+        const topbar = document.querySelector('.topbar');
+        const tabNav = document.querySelector('.tab-nav');
+        const stickyHeight =
+          (recruitBar?.offsetHeight || 0) +
+          (topbar?.offsetHeight || 0) +
+          (tabNav?.offsetHeight || 0) +
+          24;
+
+        const activePanel = document.querySelector('.tab-panel.active');
+        if(activePanel){
+          const targetY = activePanel.getBoundingClientRect().top + window.pageYOffset - stickyHeight;
+          window.scrollTo({top: Math.max(0, targetY), behavior:'smooth'});
+        }
+      });
+    });
+  });
+}
+
+function bindChannel(){
+  $$('#channelToggle button').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const m = b.dataset.mode;
+      document.body.classList.remove('mode-phone','mode-dm');
+      document.body.classList.add('mode-'+m);
+      $$('#channelToggle button').forEach(x=>x.classList.toggle('active', x===b));
+      $('#modeBadge').textContent = m==='phone' ? '전화' : 'DM·SNS';
+    });
+  });
+}
+
+function bindFAQ(){
+  // accordion
+  document.addEventListener('click', e=>{
+    const q = e.target.closest('.faq-q');
+    if(q){
+      const item = q.parentElement;
+      item.classList.toggle('open');
+    }
+  });
+  // search
+  $('#faqSearch').addEventListener('input', e=>{
+    const v = e.target.value.trim().toLowerCase();
+    $$('.faq-item').forEach(it=>{
+      const hay = (it.dataset.q||'') + ' ' + (it.dataset.a||'');
+      it.classList.toggle('hidden', v && !hay.includes(v));
+    });
+    // hide empty categories
+    $$('.faq-cat').forEach(cat=>{
+      const visible = cat.querySelectorAll('.faq-item:not(.hidden)').length;
+      cat.style.display = visible ? '' : 'none';
+    });
+  });
+}
+
+function bindCopy(){
+  document.addEventListener('click', e=>{
+    const btn = e.target.closest('.copy-btn');
+    if(!btn) return;
+    e.stopPropagation();
+    const text = btn.dataset.copy;
+    if(!text) return;
+    const decoded = text.replace(/&quot;/g,'"').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&#39;/g,"'");
+    navigator.clipboard?.writeText(decoded).then(()=>{
+      const orig = btn.textContent;
+      btn.textContent = '✓ 복사됨';
+      btn.classList.add('copied');
+      setTimeout(()=>{ btn.textContent = orig; btn.classList.remove('copied'); }, 1400);
+    }).catch(()=>{
+      // fallback
+      const ta = document.createElement('textarea');
+      ta.value = decoded;
+      document.body.appendChild(ta); ta.select();
+      try{ document.execCommand('copy'); btn.textContent = '✓ 복사됨'; }catch(_){}
+      document.body.removeChild(ta);
+    });
+  });
+}
+
+function calcDday(){
+  const target = new Date('2026-05-25T23:59:59+09:00');
+  const now = new Date();
+  const diff = Math.ceil((target - now) / (1000*60*60*24));
+  const el = $('#dday');
+  if(diff > 0){
+    el.textContent = `D-${diff} (모집마감 5/25)`;
+    if(diff <= 7) el.classList.add('urgent');
+  } else if (diff === 0){
+    el.textContent = 'D-DAY (오늘 마감)';
+    el.classList.add('urgent');
+  } else {
+    el.textContent = `D+${-diff} (모집 마감)`;
+    el.classList.add('expired');
+  }
+}
+
+function bindAdmin(){
+  $('#adminToggle').addEventListener('click', ()=> $('#adminModal').classList.add('open'));
+  $('#adminClose').addEventListener('click', ()=> $('#adminModal').classList.remove('open'));
+  $('#adminModal').addEventListener('click', e=>{ if(e.target.id==='adminModal') $('#adminModal').classList.remove('open'); });
+  // Activate via ?mode=admin
+  if(new URLSearchParams(location.search).get('mode')==='admin'){
+    $('#adminModal').classList.add('open');
+  }
+}
+
+function bindSidebar(){
+  $('#sidebarToggle').addEventListener('click', ()=>{
+    const sb = $('#sidebar');
+    const open = sb.classList.toggle('open');
+    $('#sidebarToggle').textContent = open ? '📋 사이드바 닫기' : '📋 사이드바 열기';
+  });
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  renderRecruitLink();
+  renderOpening();
+  renderClosing();
+  renderForbidden();
+  renderInfo();
+  renderCurriculumLink();
+  renderMonthTable();
+  renderWhy();
+  renderTerms();
+  renderVs();
+  renderSheet();
+  renderFAQ();
+  renderBranch();
+  bindTabs();
+  bindChannel();
+  bindFAQ();
+  bindCopy();
+  bindAdmin();
+  bindSidebar();
+  calcDday();
+});
+</script>
+</body>
+</html>
